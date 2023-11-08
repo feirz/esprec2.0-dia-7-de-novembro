@@ -3,7 +3,7 @@ import socketserver
 import os
 
 PORT = 8080 #Porta que o servidor irá escutar.
-OUTPUT_DIR = "C:\\Users\\diogo\\Documents\\ESP_REC_FACIAL\\images" #Diretório onde as fotos recebidas serão salvas.
+OUTPUT_DIR = "C:\\Users\\diogo\\OneDrive - Instituto Federal Sul-rio-grandense\\Área de Trabalho\\esprec2.0 dia 7 de novembro\\images" #Diretório onde as fotos recebidas serão salvas.
 
 class RequestHandler(http.server.SimpleHTTPRequestHandler): #Classe que trata as requisições do servidor.
 
@@ -32,7 +32,6 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler): #Classe que trata as
             #A função join() concatena o nome do arquivo com o diretório images.
 
             with open(output_path, 'wb') as f: #Abre o arquivo para escrita.
-
                 f.write(photo_data) #Escreve a foto recebida no arquivo.
                 
             self.send_response(200) #Envia uma resposta de sucesso.

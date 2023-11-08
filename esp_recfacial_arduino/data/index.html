@@ -162,17 +162,28 @@
     xhr.send();
   }
 
-  function uploadFile() {
+function uploadFile() {
   var fileInput = document.getElementById("fileToUpload");
   var file = fileInput.files[0];
-  
-  if (file) {
-    var photo = document.getElementById("photo");
-    photo.src = URL.createObjectURL(file);
-    console.log("Arquivo enviado: " + file.name);
-  } else {
-    console.log("Nenhum arquivo selecionado.");
-  }
+  var formData = new FormData();
+
+  formData.append('fileToUpload', file);
+
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if(response.ok) {
+      console.log('Upload successful');
+      var photo = document.getElementById("photo");
+      photo.src = URL.createObjectURL(file);
+      console.log("Arquivo enviado: " + file.name);
+    } else {
+      console.error('Upload failed');
+    }
+  })
+  .catch(error => console.error('Error:', error));
 }
 
   function rotatePhoto()

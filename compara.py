@@ -3,7 +3,7 @@ import face_recognition
 import os
 
 
-# Carregue a imagem base para comparação
+# Carregua a imagem base para comparação
 imagem_base = face_recognition.load_image_file("C:\\Users\\diogo\\Documents\\ESP_REC_FACIAL\\testes\\received_photo.jpg")  # Insira o caminho da imagem base
 image_face_encoding = face_recognition.face_encodings(imagem_base)[0]
 
