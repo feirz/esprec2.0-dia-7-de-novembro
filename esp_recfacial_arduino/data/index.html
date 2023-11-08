@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body
+    {
+      position: relative;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: rgb(0, 0, 0);
+      justify-content: center;
+      align-items: center;
+      height: 50vh;
+      margin: 0;
+    }
+    h2
+    {
+      margin-top: 0px;
+      margin-bottom: -10px;
+    }
+    p
+    {
+      margin-top: 15px;;
+      font-size: 12px;
+    }
+    button
+    {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #8b1c25;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-right: 10px;
+      border-radius: 7svw;
+      transition: all 0.2s ease-in;
+    }
+    footer
+    {
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      padding: 10px;
+      align-items: center;
+      background: #8b1c25;
+      color: #ffffff;
+      box-sizing: border-box;
+    }
+    .upload-button
+    {
+      padding: 14px 20px;
+      font-size: 16px;
+      background-color: #8b1c25;
+      border: none;
+      color: white;
+      cursor: pointer;
+      margin-right: 10px;
+      border-radius: 10svw;
+    }
+    button:hover
+    {
+      background-color: #c5b92f;
+    }
+    .custom-file-input {
+      margin-top: 10px;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      border-radius: 2svw;
+      background-color: #ebebeb;
+      padding: 15px;
+    }
+    .custom-file-input input[type="file"] {
+      display: none;
+    }
+    .custom-file-input label {
+      display: inline-block;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #fff;
+      background-color: #36329c;
+      border-radius: 7svw;
+    }
+    .custom-file-input label:hover {
+      background-color: #0056b3;
+    }
+    #container
+    {
+      margin-bottom: 40px;
+    }
+    #cabecalho
+    {
+      margin-top: 3px;
+      margin-bottom: 5px;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+      border-radius: 2svw;
+      background-color: #ebebeb;
+      padding: 20px 20px 0px 20px;
+    }
+    #photo
+    {
+      width: 40%;
+      margin-top: 0px;
+      margin-bottom: 100px;
+      transition: transform 0.3s;
+      border: 10px;
+      border-style: solid;
+      border-color: #fff;
+    }
+    #photo.rotate
+    {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="cabecalho">
+      <h2>Central de Cadastro de Biometria Facial</h2>
+      <p>Não se mova ao tirar a foto, espere o flash da câmera apagar.</p>
+    </div>
+    <p>
+      <button onclick="rotatePhoto();">GIRAR</button>
+      <button onclick="capturePhoto()">TIRAR FOTO</button>
+      <button onclick="toggleFlash()">FLASH</button>
+      <button onclick="location.reload();">RECARREGAR PÁGINA</button>
+    </p>
+    <div class="custom-file-input">
+      <input type="file" name="fileToUpload" id="fileToUpload" onchange="handleFile(this.files[0])">
+      <label for="fileToUpload">Selecione um arquivo</label>
+      <button class="upload-button" onclick="uploadFile()">UPLOAD</button>
+      <p id="fileInfo"></p>
+    </div>
+  </div>
+  <div>
+    <img src="saved-photo" id="photo" width="400px" height="400px">
+  </div>
+</body>
+<footer>
+  <p>Copyright 2023 © - IFSul Campus Pelotas TRÔ8M - Todos os direitos Reservados ®</p>
+</footer>
+
+<script>
+  var deg = 0;
+  var flashOn = false;
+
+  function handleFile(file)
+  {
+  console.log("Arquivo selecionado: " + file.name);
+  document.getElementById("fileInfo").innerHTML = "Arquivo selecionado: " + file.name;
+  }
+
+  function capturePhoto()
+  {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', "/capture", true);
+    xhr.send();
+  }
+
+  function uploadFile() {
+  var fileInput = document.getElementById("fileToUpload");
+  var file = fileInput.files[0];
+  
+  if (file) {
+    var photo = document.getElementById("photo");
+    photo.src = URL.createObjectURL(file);
+    console.log("Arquivo enviado: " + file.name);
+  } else {
+    console.log("Nenhum arquivo selecionado.");
+  }
+}
+
+  function rotatePhoto()
+  {
+    var img = document.getElementById("photo");
+    deg += 90;
+    img.classList.toggle("rotate");
+    img.style.transform = "rotate(" + deg + "deg)";
+  }
+
+  function toggleFlash()
+  {
+    var flashButton = document.querySelector("button:nth-child(3)");
+    flashOn = !flashOn;
+    if (flashOn)
+    {
+      flashButton.style.backgroundColor = "#f44336";
+    }
+    else
+    {
+      flashButton.style.backgroundColor = "#4CAF50";
+    }
+  }
+</script>
+</html>

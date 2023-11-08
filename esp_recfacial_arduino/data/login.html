@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #570404;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: rgba(197, 185, 47, 0.7) 5px 5px, 
+                        rgba(139, 28, 37, 0.6) 10px 10px, 
+                        rgba(197, 185, 47, 0.5) 15px 15px, 
+                        rgba(139, 28, 37, 0.4) 20px 20px, 
+                        rgba(197, 185, 47, 0.3) 25px 25px, 
+                        rgba(139, 28, 37, 0.35) 30px 30px, 
+                        rgba(197, 185, 47, 0.15) 40px 40px;
+        }
+        .bg {
+            background: url("bg.jpg") no-repeat center/cover;
+            position: absolute;
+            top: -60px;
+            left: -60px;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            filter: blur(0px);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            width: 91%;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background-color: #c5b92f;
+            color: #ffffff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.2s ease-out;
+        }
+        button[type="submit"]:hover {
+            background-color: #8b1c25;
+            transition: all 0.2s ease-in;            
+        }
+        form div {
+            margin-bottom: 0px;
+            text-align: left;
+            margin-left: 10px;
+        }
+        .botao{
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <section class="bg"></section>
+    <div class="container">
+        <h1>Cadastro de Biometria Facial</h1>
+        <form onsubmit="checkLogin(event)">
+            <div>
+                <label for="username">Nome de Usuário:</label>
+                <p><input type="text" id="username" name="username" required autocomplete="on"></p>
+            </div>
+            <div>
+                <label for="password">Senha:</label>
+                <p><input type="password" id="password" name="password" required autocomplete="on"></p>              
+            </div>
+            <div class="botao">
+                <button type="submit" onclick="checkLogin()">Login</button>
+            </div>
+        </form>
+    </div>
+    <script>
+
+        function checkLogin(event) {
+            // Previne o comportamento padrão do formulário
+            event.preventDefault();
+    
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+        
+            if (username === "admin" && password === "admin") {
+                sucessologin();
+            } else {
+                alert("Usuário ou senha incorretos. Tente novamente.");
+            }
+        }
+        async function sucessologin() {
+            window.location.href = "/sucesso";
+        }
+    </script>
+</body>
+</html>
