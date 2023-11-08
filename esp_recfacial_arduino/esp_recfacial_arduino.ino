@@ -45,6 +45,7 @@ boolean takeNewPhoto = false;
 #define PCLK_GPIO_NUM     22
 #define FLASH_PIN          4
 
+File fsUploadFile;
 
 void setup()
 {
@@ -143,11 +144,37 @@ void setup()
     request->send(SPIFFS, FILE_PHOTO, "image/jpg", false);
   });
 
+server.on("/upload", HTTP_POST, [](AsyncWebServerRequest *request){
+  int params = request->params();
+  for(int i=0;i<params;i++){
+    AsyncWebParameter* p = request->getParam(i);
+    if(p->isFile()){
+      String filename = p->value().substring(p->value().lastIndexOf('/') + 1);
+      Serial.printf("FILE[%s]: %s, size: %u\n", p->name().c_str(), filename.c_str(), p->size());
+      // Não precisamos mais salvar o arquivo aqui
+      uploadPhoto(filename);
+    }
+  }
+  request->send(200, "text/plain", "File Uploaded Successfully");
+},[](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final){
+  // Este é o manipulador de upload
+  if(!index){
+    // Este é o início do upload, abra o arquivo
+    filename = "/" + filename;
+    Serial.printf("UploadStart: %s\n", filename.c_str());
+    fsUploadFile = SPIFFS.open(filename, "w");
+  }
+  // Escreva os dados recebidos no arquivo
+  fsUploadFile.write(data,len);
+  if(final){
+    // Este é o final do upload, feche o arquivo
+    Serial.printf("UploadEnd: %s, %u B\n", filename.c_str(), index+len);
+    fsUploadFile.close();
+  }
+});
   // Start server
   server.begin();
-
 }
-
 void loop()
 {
   if (takeNewPhoto)
@@ -224,4 +251,36 @@ void capturePhoto()
   }
 
   http.end();
+}
+
+void uploadPhoto(String filename)
+{
+    HTTPClient http;
+
+    // Endereço do servidor onde o Python está aguardando a imagem
+    http.begin(serverAddress);
+
+    // Abra o arquivo do SPIFFS
+    File file = SPIFFS.open("/"+filename, "r");
+    if(!file){
+        Serial.println("Failed to open file for reading");
+        return;
+    }
+
+    // Envie a imagem como um arquivo
+    http.addHeader("Content-Type", "image/jpeg");
+    int httpCode = http.sendRequest("POST", &file, file.size());
+
+    // Verifique se o envio foi bem-sucedido
+    if (httpCode == 200)
+    {
+        Serial.println("Image sent successfully");
+    }
+    else
+    {
+        Serial.println("Image upload failed");
+    }
+
+    http.end();
+    file.close();
 }
